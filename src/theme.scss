@@ -1,0 +1,65 @@
+@import '~@angular/material/theming';
+@import '~@covalent/core/theming/all-theme';
+@import '~@covalent/highlight/highlight-theme';
+
+// Plus imports for other components in your app.
+
+// Custom typography
+$custom-typography: mat-typography-config(
+  $button: mat-typography-level(14px, 14px, 400),
+  $font-family: 'Arial, Helvetica, sans-serif',
+);
+
+// Include the base styles for Angular Material core. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+@include mat-core($custom-typography);
+
+@import 'assets/font/ridley-grotesk';
+
+@import '~@td-vantage/ui-platform/theming';
+
+// Include the core styles for Covalent
+@include covalent-core();
+
+// Include material-icons
+@import '../node_modules/@covalent/core/common/material-icons.css';
+
+// Include covalent utility classes
+@include covalent-utilities();
+
+// Include flex layout classes
+@include covalent-layout();
+
+// Include covalent color classes
+@include covalent-colors();
+
+// Create the theme object (a Sass map containing all of the palettes).
+$theme: mat-light-theme($td-primary, $td-accent, $td-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($theme);
+@include covalent-theme($theme);
+@include covalent-highlight-theme();
+// Include Teradata brand
+@include teradata-brand($theme);
+
+/* ------------------------------------- DARK THEME ------------------------------------------ */
+
+.dark-theme {
+  $dark-theme: mat-dark-theme($td-dark-primary, $td-dark-accent, $td-dark-warn);
+
+  @include angular-material-theme($dark-theme);
+  @include covalent-theme($dark-theme);
+  // Include Teradata brand
+  @include teradata-brand($dark-theme);
+
+  [class^='tc-grey-'],
+  [class*=' tc-grey-'] {
+    color: white !important;
+  }
+  .mat-focused:not(.mat-form-field-invalid) .mat-form-field-placeholder {
+    color: mat-color($td-dark-primary, lighter);
+  }
+}

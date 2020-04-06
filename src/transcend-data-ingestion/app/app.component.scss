@@ -1,0 +1,35 @@
+:host {
+    /**
+    * CSS Overrides for bug fixes
+    */
+    td-navigation-drawer > div {
+      overflow: hidden;
+    }
+    /**
+    * END CSS Overrides for bug fixes
+    */
+
+     /* Get header back to white text */
+    mat-toolbar.md-primary {
+        color: white;
+    }
+
+
+    /* Manage list custom styles */
+    .md-sort-item {
+            .mat-list-item-content {
+                padding: 0;
+        }
+    }
+    .md-sort-icon {
+        font-size: 15px;
+        margin-left: 5px;
+    }
+    .md-sort-header {
+        padding: 10px;
+        &:hover {
+            background-color: #EEEEEE;
+            cursor: pointer;
+        }
+    }
+}

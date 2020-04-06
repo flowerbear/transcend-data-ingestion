@@ -1,0 +1,42 @@
+.will-load {
+    min-height: 80px;
+}
+// Href line height wasn't right for md-icon-button
+a[mat-icon-button] {
+    line-height: 36px;
+}
+
+// Stretch tab labels until there is an attribute for it
+.md-tab-label {
+    flex-grow: 1;
+}
+
+// NGX Charts
+// Hide X axis grid lines
+.gridline-path-vertical {
+    display: none;
+}
+
+// Add to views with a bottom right FAB
+.fab-pad {
+  padding-bottom: 80px;
+}
+
+.mat-list-item .mat-form-field-type-mat-select .mat-form-field-infix {
+   padding-top: 0;
+}
+
+.mat-toolbar {
+   z-index: 2;
+}
+
+// style to override fixed width from material input
+.mat-input-infix.mat-form-field-infix {
+  width: 100%;
+}
+
+.color-series-item {
+    height: 12px;
+    width: 12px;
+    border-radius: 18%;
+}

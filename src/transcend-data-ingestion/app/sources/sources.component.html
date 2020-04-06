@@ -1,0 +1,47 @@
+<td-layout-manage-list #manageList
+                        [opened]="media.registerQuery('gt-sm') | async"
+                        [mode]="(media.registerQuery('gt-sm') | async) ? 'side' : 'push'"
+                        [sidenavWidth]="(media.registerQuery('gt-xs') | async) ? '257px' : '100%'">
+  <mat-toolbar td-sidenav-content>
+    <mat-toolbar-row>
+      <mat-icon class="push-left-xs push-right-sm">settings_input_antenna</mat-icon> <span class="push-left-sm">{{'SOURCES' | translate }}</span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-nav-list td-sidenav-content [tdLayoutManageListClose]="!media.query('gt-sm')">
+    <a mat-list-item tabindex=0>
+      <mat-icon mdListIcon>settings_input_antenna</mat-icon>
+      {{'ALL_SOURCE_TYPES' | translate }}
+    </a>
+    <a mat-list-item tabindex=0>
+      <mat-icon mdListIcon>rss_feed</mat-icon>
+      {{'SALESFORCE_SOURCES' | translate }}
+    </a>
+    <a mat-list-item tabindex=0>
+      <mat-icon mdListIcon>build</mat-icon>
+      {{'SPRINKLR_SOURCES' | translate }}
+    </a>
+    <a mat-list-item tabindex=0>
+      <mat-icon mdListIcon>dns</mat-icon>
+      {{'FILE_SOURCES' | translate }}
+    </a>
+  </mat-nav-list>
+  <mat-toolbar td-toolbar-content>
+    <mat-toolbar-row>
+      <button mat-icon-button tdLayoutManageListOpen [hideWhenOpened]="true">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span hide-xs>{{'MANAGE_SOURCES' | translate }}</span>
+      <span flex></span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div class="fab-pad">
+  <mat-card tdMediaToggle="gt-xs" [mediaClasses]="['push']">
+    <mat-card-content class="text-center">
+      <div class="md-subhead">PLACEHOLDER</div>
+    </mat-card-content>
+  </mat-card>
+</div>
+</td-layout-manage-list>
+<button mat-fab matTooltip="{{ 'ADD_SOURCE' | translate}}" matTooltipPosition="before" color="accent" [routerLink]="['sources/form']" class="mat-fab-bottom-right fixed z-3">
+  <mat-icon>add</mat-icon>
+</button>

@@ -1,0 +1,42 @@
+<td-layout #layout>
+  <td-navigation-drawer
+    [logo]="_themeService.map({ 'dark-theme': 'teradata', 'light-theme': 'teradata-dark' }) | async"
+    [sidenavTitle]="'APP_TITLE' | translate"
+    [name]="user?.display_name"
+    [email]="user?.email"
+    flex
+  >
+    <td-nav-links [links]="links"></td-nav-links>
+    <mat-nav-list td-navigation-drawer-menu>
+      <a mat-list-item (click)="logout()">
+        <mat-icon matListIcon>exit_to_app</mat-icon>
+        {{ 'SIGN_OUT' | translate }}
+      </a>
+    </mat-nav-list>
+  </td-navigation-drawer>
+  <div td-sidenav-content class="td-layout-footer pad">
+    {{ 'COPYRIGHT' | translate:{year: year} }}
+  </div>
+  <td-layout-nav logo="teradata" [toolbarTitle]="'APP_TITLE' | translate">
+    <button mat-icon-button td-menu-button tdLayoutToggle>
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div td-toolbar-content layout="row" layout-align="start center" flex>
+      <span flex></span>
+      <button mat-icon-button [matMenuTriggerFor]="moreMenu">
+        <mat-icon>
+          more_vert
+        </mat-icon>
+      </button>
+      <mat-menu #moreMenu>
+        <button mat-menu-item (click)="_themeService.toggleTheme()">
+          <mat-icon matListIcon>
+            {{ _themeService.map({ 'dark-theme': 'brightness_high', 'light-theme': 'brightness_low' }) | async }}
+          </mat-icon>
+            {{ _themeService.map({ 'dark-theme': 'LIGHT_MODE', 'light-theme': 'DARK_MODE' }) | async | translate }}
+        </button>
+      </mat-menu>
+    </div>
+    <router-outlet></router-outlet>
+  </td-layout-nav>
+</td-layout>

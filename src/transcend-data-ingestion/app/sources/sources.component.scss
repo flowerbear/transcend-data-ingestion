@@ -1,0 +1,36 @@
+.icon {
+  font-size: 48px;
+}
+
+.mat-toolbar-row, .mat-toolbar-single-row {
+    height: 64px;
+    background: #f5f5f5;
+}
+
+
+/* :host /deep/ lets shadowdom style child elements */
+:host {
+    mat-radio-button {
+        padding: 7px 23px;
+        display: block;
+
+        &:hover, &.md-radio-checked {
+            cursor: pointer;
+            background-color: rgba(0,0,0,0.04);
+        }
+    }
+    .md-radio-label-content {
+       position: relative;
+       top: -2px;
+       left: 2px;
+    }
+    .fab-space {
+        margin-right: 80px;
+    }
+    mat-nav-list {
+        .mat-button-toggle-label-content {
+            padding: 0 6px;
+            border-radius: 90%;
+        }
+    }
+}

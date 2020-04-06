@@ -1,0 +1,147 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "transcend-data-ingestion": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular-builders/custom-webpack:browser",
+          "options": {
+            "indexTransform": "node_modules/@td-vantage/ui-platform/utilities/pre-loader",
+            "outputPath": "dist",
+            "index": "src/transcend-data-ingestion/index.html",
+            "main": "src/transcend-data-ingestion/main.ts",
+            "tsConfig": "src/transcend-data-ingestion/tsconfig.app.json",
+            "polyfills": "src/polyfills.ts",
+            "aot": false,
+            "assets": [
+              "src/assets",
+              {
+                "glob": "config.js",
+                "input": "src/transcend-data-ingestion/",
+                "output": "/"
+              },
+              {
+                "glob": "favicon.ico",
+                "input": "src/transcend-data-ingestion/",
+                "output": "/"
+              }
+            ],
+            "styles": ["src/theme.scss", "src/transcend-data-ingestion/styles.scss"],
+            "scripts": ["node_modules/hammerjs/hammer.min.js"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/transcend-data-ingestion/environments/environment.ts",
+                  "with": "src/transcend-data-ingestion/environments/environment.prod.ts"
+                }
+              ],
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-builders/custom-webpack:dev-server",
+          "options": {
+            "browserTarget": "transcend-data-ingestion:build",
+            "proxyConfig": "./proxy.conf.js"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "transcend-data-ingestion:build:production",
+              "proxyConfig": "./proxy.conf.js"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "transcend-data-ingestion:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/transcend-data-ingestion/test.ts",
+            "karmaConfig": "./karma.conf.js",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/transcend-data-ingestion/tsconfig.spec.json",
+            "scripts": ["node_modules/hammerjs/hammer.min.js"],
+            "styles": ["src/theme.scss", "src/transcend-data-ingestion/styles.scss"],
+            "assets": [
+              "src/assets",
+              {
+                "glob": "config.js",
+                "input": "src/transcend-data-ingestion/",
+                "output": "/"
+              },
+              {
+                "glob": "favicon.ico",
+                "input": "src/transcend-data-ingestion/",
+                "output": "/"
+              }
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["src/transcend-data-ingestion/tsconfig.app.json", "src/transcend-data-ingestion/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "devServerTarget": "transcend-data-ingestion:serve",
+            "cypressConfig": "./cypress.json",
+            "tsConfig": "./tsconfig.json",
+            "browser": "electron",
+            "headless": true
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "transcend-data-ingestion:serve:production"
+            }
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "transcend-data-ingestion",
+  "schematics": {
+    "@schematics/angular:component": {
+      "prefix": "app",
+      "styleext": "scss"
+    },
+    "@schematics/angular:directive": {
+      "prefix": "app"
+    }
+  }
+}

@@ -1,0 +1,218 @@
+<td-layout-card-over>
+    <mat-card-title>
+      <div layout="row" layout-align="start center">
+        <button mat-icon-button class="mat-icon-button" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <span class="push-left-xs">
+          {{'CREATE_EDIT_SOURCE' | translate }}
+        </span>
+      </div>
+    </mat-card-title>
+    <!--<mat-card-subtitle *ngIf="!noSourceIDSpecified()">
+        {{'CREATE_EDIT_TARGET.DESCRIPTION' | translate:{ source_name: source ? source.name : target.source_id } }}
+    </mat-card-subtitle>-->
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      <ng-template tdLoading="source.form">
+        <td-steps>
+        <td-step #kafkaStep label="{{'KAFKA_SETUP' | translate }}"
+          sublabel="{{'KAFKA_SETUP.SUBLABEL' | translate }}"
+          [active]="true"
+          [disabled]="locked()"
+          [state]="stateKafkaStep">
+          <form #kafkaSetupForm="ngForm" novalidate>
+            <ng-template tdLoading="KafkaSetupFormLoader">
+              <div layout="row" class="push-bottom-sm" layout-margin>
+                <mat-form-field flex="100">
+                  <input matInput #name required [(ngModel)]="kafkaTopic.topic"
+                          name="name" placeholder="{{'KAKFA_NAME' | translate }}" maxlength="100">
+                  <mat-hint align="end">{{name.value.length}} / 100</mat-hint>
+                </mat-form-field>
+              </div>
+              <div layout="row" class="push-bottom" layout-margin>
+                <mat-form-field flex="100">
+                  <input matInput #partition required [(ngModel)]="kafkaTopic.num_partitions" type="number"
+                          name="partition" placeholder="{{'KAFKA_PARTITION' | translate }}" maxlength="10">
+                  <mat-hint align="end">{{partition.value.length}} / 10</mat-hint>
+                </mat-form-field>
+              </div>
+              <div layout="row" class="push-bottom-sm" layout-margin>
+                <mat-form-field flex="100">
+                  <input matInput #replication required [(ngModel)]="kafkaTopic.replication_factor" type="number"
+                          name="replication" placeholder="{{'KAFKA_REPLICATION' | translate }}" maxlength="10">
+                  <mat-hint align="end">{{replication.value.length}} / 10</mat-hint>
+                </mat-form-field>
+              </div>
+              <div layout-gt-sm="row" layout="column" layout-align-gt-sm="start center" layout-align="start left" class="push-top" layout-margin>
+                <button mat-raised-button color="accent" [disabled]="!kafkaTopic.topic || !kafkaTopic.num_partitions || !kafkaTopic.replication_factor" (click)="createKafkaTopic(listenerStep)" class="text-upper push-right-sm push-top-sm">{{'SAVE'| translate }}</button>
+                <button mat-button (click)="kafkaStep.active = false; repopulateKafkaStep()" class="text-upper push-right-sm push-top-sm">{{'CANCEL'| translate }}</button>
+              </div>
+            </ng-template>
+          </form>
+          <ng-template td-step-summary>
+            <div flex layout-gt-xs="row" layout-align="start center">
+              <span flex="30" class="md-subhead">{{'KAKFA_NAME' | translate }}</span>
+              <span hide show-xs>: </span>
+              <span flex="5" hide-xs><mat-icon class="tc-grey-500">chevron_right</mat-icon></span>
+              <span flex class="word-break">{{kafkaTopic.topic}} <strong>({{kafkaTopicCreateStatus}})</strong></span>
+            </div>
+            <div flex layout-gt-xs="row" layout-align="start center" hide show-gt-sm>
+              <span flex="30" class="md-subhead">{{'KAFKA_PARTITION' | translate }}</span>
+              <span hide show-xs>: </span>
+              <span flex="5" hide-xs><mat-icon class="tc-grey-500">chevron_right</mat-icon></span>
+              <span flex class="word-break">{{kafkaTopic.num_partitions}}</span>
+            </div>
+            <div flex layout-gt-xs="row" layout-align="start center">
+              <span flex="30" class="md-subhead">{{'KAFKA_REPLICATION' | translate }}</span>
+              <span hide show-xs>: </span>
+              <span flex="5" hide-xs><mat-icon class="tc-grey-500">chevron_right</mat-icon></span>
+              <span flex class="word-break">{{kafkaTopic.replication_factor}}</span>
+            </div>
+          </ng-template>
+        </td-step>
+        <td-step #listenerStep
+          label="{{'LISTENER_SETUP' | translate }}"
+          sublabel="{{'LISTENER_SETUP.SUBLABEL' | translate }}"
+          [disabled]="(stateKafkaStep !== 'complete') || ((stateListenerStep === 'complete') && (stateKafkaStep === 'complete'))"
+          [state]="stateListenerStep">
+          <form #listenerSetupForm="ngForm" novalidate>
+            <ng-template tdLoading="listnerSetupFormLoader">
+              <div layout="row" class="push-bottom-sm" layout-margin>
+                <mat-form-field flex="100">
+                  <input matInput #name required [(ngModel)]="listenerJobName"
+                    name="name" placeholder="{{'LISTENER_NAME' | translate }}" maxlength="50" [disabled]="sourceId">
+                  <mat-hint align="end">{{name.value.length}} / 50</mat-hint>
+                </mat-form-field>
+              </div>
+              <div layout="row" class="push-bottom-sm" layout-margin>
+                <mat-form-field flex="100">
+                  <input matInput #description required [(ngModel)]="listenerJobDescription"
+                    name="description" placeholder="{{'LISTENER_DESCRIPTION' | translate }}" maxlength="100" [disabled]="sourceId">
+                  <mat-hint align="end">{{description.value.length}} / 100</mat-hint>
+                </mat-form-field>
+              </div>
+              <div layout-gt-sm="row" layout="column" layout-margin *ngIf="!token">
+                <mat-form-field flex class="push-right">
+                  <input matInput #usernameElement [(ngModel)]="username"
+                    name="username" placeholder="{{'USERNAME' | translate }}" maxlength="100">
+                  <mat-hint align="end">{{usernameElement.value.length}} / 100</mat-hint>
+                </mat-form-field>
+                <mat-form-field flex>
+                  <input matInput #passwordElement [(ngModel)]="password"
+                  name="password" type="password" placeholder="{{'PASSWORD' | translate }}" maxlength="100">
+                  <mat-hint align="end">{{passwordElement.value.length}} / 100</mat-hint>
+                </mat-form-field>
+              </div>
+              <div layout-gt-sm="row" layout="column" layout-align-gt-sm="start center" layout-align="start left" class="push-top" layout-margin *ngIf="!token">
+                <button mat-raised-button color="accent" [disabled]="!username || !password" (click)="login()" class="text-upper push-right-sm push-top-sm">{{'TOKEN'| translate }}</button>
+              </div>
+              <div layout="row" class="push-bottom-sm" layout-margin *ngIf="token">
+                <mat-form-field flex="100">
+                  <mat-select #systemSelect required placeholder="{{'SELECT_SYSTEM' | translate }}" [(ngModel)]="system" name="system">
+                    <ng-container *ngFor="let system of systems">
+                      <mat-option *ngIf="system.system_type === 'teradata'" [value]="system">
+                        {{system.name}}
+                      </mat-option>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div layout-gt-sm="row" layout="column" layout-margin *ngIf="token">
+                <mat-form-field flex>
+                  <input matInput #batchnameElement required [(ngModel)]="batchname"
+                    name="batchname" placeholder="{{'BATCHID' | translate }}" maxlength="100">
+                  <mat-hint align="end">{{batchnameElement.value.length}} / 100</mat-hint>
+                </mat-form-field>
+                <mat-form-field flex>
+                  <input matInput #batchpasswordElement required [(ngModel)]="batchpassword"
+                    name="batchpassword" type="password" placeholder="{{'PASSWORD' | translate }}" maxlength="100">
+                  <mat-hint align="end">{{batchpasswordElement.value.length}} / 100</mat-hint>
+                </mat-form-field>
+              </div>
+              <div layout-gt-sm="row" layout="column" layout-margin *ngIf="token">
+                <mat-form-field flex>
+                  <input matInput #databaseElement required [(ngModel)]="schemaName"
+                        name="schema" placeholder="{{'DATABASE' | translate }}" maxlength="100">
+                  <mat-hint align="end">{{databaseElement.value.length}} / 100</mat-hint>
+                </mat-form-field>
+                <mat-form-field flex>
+                  <input matInput #tableElement required [(ngModel)]="tableName"
+                        name="table" placeholder="{{'TABLE' | translate }}" maxlength="100">
+                  <mat-hint align="end">{{tableElement.value.length}} / 100</mat-hint>
+                </mat-form-field>
+              </div>
+              <div layout-gt-sm="row" layout="column" layout-align-gt-sm="start center" layout-align="start left" class="push-top" layout-margin *ngIf="token">
+                <button mat-raised-button color="accent" [disabled]="!listenerJobName || !listenerJobDescription || !batchname || !batchpassword || !schemaName || !tableName" (click)="createListenerJob(kafkaConnectStep)" class="text-upper push-right-sm push-top-sm">{{'SAVE'| translate }}</button>
+                <button mat-button (click)="listenerStep.active = false; repopulateListenerStep()" class="text-upper push-right-sm push-top-sm">{{'CANCEL'| translate }}</button>
+              </div>
+            </ng-template>
+          </form>
+          <ng-template td-step-summary>
+            <div flex layout-gt-xs="row" layout-align="start center">
+              <span flex="30" class="md-subhead">{{'LISTENER_NAME' | translate }}</span>
+              <span hide show-xs>: </span>
+              <span flex="5" hide-xs><mat-icon class="tc-grey-500">chevron_right</mat-icon></span>
+              <span flex class="word-break">{{listenerJobName}}</span>
+            </div>
+            <div flex layout-gt-xs="row" layout-align="start center" hide show-gt-sm>
+              <span flex="30" class="md-subhead">{{'LISTENER_DESCRIPTION' | translate }}</span>
+              <span hide show-xs>: </span>
+              <span flex="5" hide-xs><mat-icon class="tc-grey-500">chevron_right</mat-icon></span>
+              <span flex class="word-break">{{listenerJobDescription}}</span>
+            </div>
+            <div flex layout-gt-xs="row" layout-align="start center" hide show-gt-sm>
+              <span flex="30" class="md-subhead">{{'SOURCE_ID' | translate }}</span>
+              <span hide show-xs>: </span>
+              <span flex="5" hide-xs><mat-icon class="tc-grey-500">chevron_right</mat-icon></span>
+              <span flex class="word-break">{{sourceId}}</span>
+            </div>
+            <div flex layout-gt-xs="row" layout-align="start center" hide show-gt-sm>
+              <span flex="30" class="md-subhead">{{'TARGET_ID' | translate }}</span>
+              <span hide show-xs>: </span>
+              <span flex="5" hide-xs><mat-icon class="tc-grey-500">chevron_right</mat-icon></span>
+              <span flex class="word-break">{{targetId}}</span>
+            </div>
+          </ng-template>
+        </td-step>
+        <td-step #kafkaConnectStep label="{{'KAFKA_CONNECT_SETUP' | translate }}"
+          sublabel="{{'KAFKA_CONNECT_SETUP.SUBLABEL' | translate }}"
+          [disabled]="(stateKafkaStep !== 'complete') || (stateListenerStep !== 'complete') || ((stateListenerStep === 'complete') && (stateKafkaStep === 'complete') && (stateKafkaConnectStep === 'complete'))"
+          [state]="stateKafkaConnectStep">
+          <form #kafkaConnectSetupForm="ngForm" novalidate>
+            <ng-template tdLoading="KafkaConnectSetupFormLoader">
+              <div layout="row" class="push-bottom-sm" layout-margin>
+                <mat-form-field flex="100">
+                  <input matInput #kafkaConnectElement required [(ngModel)]="kafkaConnectName"
+                          name="kafkaConnectElement" placeholder="{{'KAKFA_CONNECT_NAME' | translate }}" maxlength="35">
+                  <mat-hint align="end">{{kafkaConnectElement.value.length}} / 35</mat-hint>
+                </mat-form-field>
+              </div>
+              <div layout="row" class="push-bottom" layout-margin>
+                <mat-form-field flex="100">
+                  <mat-label>{{'KAKFA_CONNECT_JOB_CONF' | translate }}</mat-label>
+                  <textarea matInput #kafkaConnectJobJsonElement required [(ngModel)]="KafkaConnectJobJson"
+                    cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="100"
+                    name="kafkaConnectJobJsonElement" placeholder="{{'KAKFA_CONNECT_JOB_CONF' | translate }}">
+                  </textarea>
+                </mat-form-field>
+              </div>
+              <div layout-gt-sm="row" layout="column" layout-align-gt-sm="start center" layout-align="start left" class="push-top" layout-margin>
+                <button mat-raised-button color="accent" [disabled]="!kafkaConnectName || !KafkaConnectJobJson" (click)="createKafkaConnectJob()" class="text-upper push-right-sm push-top-sm">{{'SAVE'| translate }}</button>
+                <button mat-button (click)="kafkaConnectStep.active = false; repopulateKafkaConnectStep()" class="text-upper push-right-sm push-top-sm">{{'CANCEL'| translate }}</button>
+              </div>
+            </ng-template>
+          </form>
+          <ng-template td-step-summary>
+            <div flex layout-gt-xs="row" layout-align="start center">
+              <span flex="30" class="md-subhead">{{'KAKFA_CONNECT_NAME' | translate }}</span>
+              <span hide show-xs>: </span>
+              <span flex="5" hide-xs><mat-icon class="tc-grey-500">chevron_right</mat-icon></span>
+              <span flex class="word-break">{{kafkaConnectName}}</span>
+            </div>
+          </ng-template>
+        </td-step>
+      </td-steps>
+    </ng-template>
+  </mat-card-content>
+</td-layout-card-over>

@@ -1,0 +1,55 @@
+<div flex>
+  <mat-toolbar>
+    <div flex layout="row" layout-align="start center">
+      <mat-icon class="push-left-sm push-right">dashboard</mat-icon>
+      <span class="push-left-xs">{{ 'DASHBOARD' | translate }}</span>
+      <span flex></span>
+    </div>
+  </mat-toolbar>
+  <div class="md-content" flex>
+    <div layout="column" layout-gt-sm="row" class="inset">
+      <div flex-gt-sm="60">
+        <div layout="row" layout-xs="column">
+          <div flex-gt-xs="50" layout="column">
+            <mat-card class="mat-card-colored" flex>
+              <mat-card-content class="text-center">
+                <div class="md-subhead">{{'TOTAL_RECORDS' | translate }}</div>
+                <div layout="row" layout-align="center center" layout-margin>
+                  <mat-icon class="push-top-xs" color="accent">settings_ethernet</mat-icon>
+                  <div class="md-display-1 push-left-sm volume.load">{{ 102 | digits }}</div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          <div flex-gt-xs="50" layout="column">
+            <mat-card class="mat-card-colored" flex>
+              <mat-card-content class="text-center">
+                <div class="md-subhead">{{'TOTAL_SIZE' | translate }}</div>
+                <div layout="row" layout-align="center center" layout-margin>
+                  <mat-icon class="push-top-xs"  color="accent">save</mat-icon>
+                  <div class="md-display-1 push-left-sm volume.load">{{ 98 | bytes }}</div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+        <mat-card>
+          <mat-card-title>{{'STAR_SOURCES' | translate }}</mat-card-title>
+          <mat-card-subtitle>{{'STAR_SOURCES.DESCRIPTION' | translate }}</mat-card-subtitle>
+          <mat-divider></mat-divider>
+          <mat-divider></mat-divider>
+          <mat-card-actions>
+            <a mat-button   color="accent" class="text-upper" [routerLink]="['/sources']">
+              <span class="text-upper">{{'VIEW_ALL' | translate }}</span>
+            </a>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  <!--<mat-toolbar td-sidenav-content>
+          <mat-toolbar-row>
+            <mat-icon class="push-left-xs push-right-sm">settings_input_antenna</mat-icon> <span class="push-left-sm">{{'SOURCES' | translate }}</span>
+          </mat-toolbar-row>
+    </mat-toolbar>-->
+</div>
