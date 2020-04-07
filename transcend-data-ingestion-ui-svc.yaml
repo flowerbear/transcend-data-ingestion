@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui
+  namespace: transcend-frameworks
+  labels:
+    app: transcend-data-ingestion-ui
+  annotations:
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind:  Mapping
+      name:  transcend-data-ingestion-ui
+      prefix: "/transcend-data-ingestion"
+      timeout_ms: 90000
+      service: ui.transcend-frameworks:8080
+spec:
+  ports:
+    - name: ui-port
+      port: 8080
+      protocol: TCP
+  selector:
+    app: transcend-data-ingestion-ui
+  type: NodePort

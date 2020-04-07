@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transcend-data-ingestion-ui
+  namespace: transcend-frameworks
+  labels:
+      app: transcend-data-ingestion-ui
+spec:
+  replicas: 1
+  selector:
+      matchLabels:
+          app: transcend-data-ingestion-ui
+  template:
+    metadata:
+      labels:
+        app: transcend-data-ingestion-ui
+    spec:
+      containers:
+      - name: transcend-data-ingestion-ui
+        image: 153.65.121.92:32010/transcend-data-ingestion-ui:1.0.0
+        imagePullPolicy: Always
+
+        ports:
+        - containerPort: 8080
+        env:
+        - name: "APPCENTER_BASE_URL"
+          value: "https://transcend-vantage-dev.td.teradata.com"
+        - name: "APP_CONTEXT_PATH"
+          value: "/transcend-data-ingestion"
